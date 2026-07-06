@@ -1,0 +1,16 @@
+DB_CONFIG = {
+    "host": "localhost",
+    "port": 5432,
+    "database": "enterprise_ai_sql_copilot",
+    "user": "",
+    "password": ""
+}
+
+NUMBER_OF_BRANCHES = 100
+NUMBER_OF_EMPLOYEES = 500
+NUMBER_OF_CUSTOMERS = 10000
+NUMBER_OF_ACCOUNTS = 15000
+NUMBER_OF_TRANSACTIONS = 100000
+NUMBER_OF_LOANS = 3500
+NUMBER_OF_CREDIT_CARDS = 5000
+NUMBER_OF_FIXED_DEPOSITS = 2000

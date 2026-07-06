@@ -1,0 +1,24 @@
+# Java / Spring Boot
+target/
+*.log
+*.class
+
+# IntelliJ / VSCode
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node (if React frontend exists)
+node_modules/
+dist/
+build/
+
+# Python (if used)
+__pycache__/
+*.pyc
+
+# Env files
+.env
