@@ -28,28 +28,28 @@ def main():
     #generate_accounts(conn)
 
     print("Generating Transactions...")
-    generate_account_transactions(conn)
+    # generate_account_transactions(conn)
 
     print("Generating Loans...")
-    generate_loans()
+    # generate_loans(conn)
 
     print("Generating EMIs...")
-    generate_loan_emis()
+    # generate_loan_emis(conn)
 
     print("Generating Credit Cards...")
-    generate_credit_cards()
+    #generate_credit_cards(conn)
 
     print("Generating Card Transactions...")
-    generate_card_transactions()
+    # generate_card_transactions(conn)
 
     print("Generating Fixed Deposits...")
-    generate_fixed_deposits()
+    # generate_fixed_deposits(conn)
 
     print("Generating Beneficiaries...")
-    generate_beneficiaries()
+    # generate_beneficiaries(conn)
 
     print("Generating Nominees...")
-    generate_nominees()
+    generate_nominees(conn)
 
     print("Data generation completed successfully.")
 

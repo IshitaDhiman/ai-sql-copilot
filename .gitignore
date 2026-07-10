@@ -19,6 +19,8 @@ build/
 # Python (if used)
 __pycache__/
 *.pyc
+venv/
+.venv/
 
 # Env files
 .env
