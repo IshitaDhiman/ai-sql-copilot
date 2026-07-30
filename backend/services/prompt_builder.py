@@ -1,5 +1,6 @@
 from app.rag.retriever import retrieve_relevant_chunks
 from services.schema_service import fetch_schema
+from services.enum_services import fetch_lookup_values
 
 
 def format_schema(schema: dict) -> str:
@@ -44,10 +45,31 @@ def format_knowledge(chunks: list) -> str:
 
     return knowledge
 
+def format_lookup_values(values: dict) -> str:
+    """
+    Formats lookup/enum values for the LLM prompt.
+    """
+
+    if not values:
+        return "No lookup values found."
+
+    text = ""
+
+    for key, items in values.items():
+
+        text += f"{key}\n"
+
+        for item in items:
+            text += f"   - {item}\n"
+
+        text += "\n"
+
+    return text
 
 def build_prompt(question: str) -> str:
 
     schema = fetch_schema()
+    lookup_values = fetch_lookup_values()
 
     chunks = retrieve_relevant_chunks(
         question,
@@ -57,6 +79,7 @@ def build_prompt(question: str) -> str:
     schema_text = format_schema(schema)
 
     knowledge_text = format_knowledge(chunks)
+    lookup_text = format_lookup_values(lookup_values)
 
     prompt = f"""
 You are an expert PostgreSQL SQL Developer.
@@ -120,6 +143,10 @@ credit_card cc
 
 15. Use business knowledge whenever applicable.
 
+16. If filtering on lookup or enum columns, ALWAYS use one of the values listed in the LOOKUP / ENUM VALUES section.
+
+17. Never guess lookup or enum values.
+
 =========================================================
 BANKING KNOWLEDGE
 =========================================================
@@ -131,6 +158,20 @@ DATABASE SCHEMA
 =========================================================
 
 {schema_text}
+
+=========================================================
+LOOKUP / ENUM VALUES
+=========================================================
+
+The following columns contain fixed values stored in the database.
+
+When filtering on these columns:
+
+- Always use one of the values exactly as written.
+- Never change the capitalization.
+- Never invent new values.
+
+{lookup_text}
 
 =========================================================
 EXAMPLES
@@ -160,7 +201,7 @@ SELECT
     sanctioned_amount,
     outstanding_amount
 FROM loan
-WHERE loan_status = 'Active';
+WHERE loan_status = 'ACTIVE';
 
 ----------------------------------------
 
@@ -176,6 +217,26 @@ FROM customer c
 JOIN customer_segment cs
 ON c.customer_segment_id = cs.customer_segment_id
 WHERE cs.segment_name = 'Premium';
+
+----------------------------------------
+
+Question:
+Show premium customers with active loans
+
+SQL:
+SELECT
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    l.loan_id,
+    l.outstanding_amount
+FROM customer c
+JOIN customer_segment cs
+ON c.customer_segment_id = cs.customer_segment_id
+JOIN loan l
+ON c.customer_id = l.customer_id
+WHERE cs.segment_name = 'Premium'
+AND l.loan_status = 'ACTIVE';
 
 =========================================================
 USER QUESTION
